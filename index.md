@@ -5,4 +5,4 @@ Right now things are pretty empty, but it should fill up soon!
 
 ### Labs
 
-* Lab 1: No-tech Puppeteering *(Coming Soon!)*
+* [Lab 1: No-tech Puppeteering](labs/lab1)
