@@ -6,3 +6,4 @@ Right now things are pretty empty, but it should fill up soon!
 ### Labs
 
 * [Lab 1: No-tech Puppeteering](labs/lab1)
+* [Lab 2: Intro to Haply](labs/lab2)
