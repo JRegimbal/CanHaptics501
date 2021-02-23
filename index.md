@@ -8,3 +8,4 @@ Right now things are pretty empty, but it should fill up soon!
 * [Lab 1: No-tech Puppeteering](labs/lab1)
 * [Lab 2: Intro to Haply](labs/lab2)
 * [Lab 3: Communicate Something with Haply](labs/lab3)
+* [Lab 4: Controlled Actuation using PID](labs/lab4)
