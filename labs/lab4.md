@@ -68,7 +68,7 @@ desired position faster if possible.
 Since it seems many problems come from the end effector overshooting and getting into a bad state, I think
 increasing the update frequency might prove useful.
 However,the keypresses do not seem to actually adjust the looptime parameter correctly and the next lowest
-value on the slider, 250 ms, is too quick a loop for Processing on my computer.
+value on the slider, 250 &micro;s, is too quick a loop for Processing on my computer.
 
 Next was adjusting the PID values to try and result in reaching the target more quickly.
 Now that the integrator and differentiator parts are present, I increased the proportional value to
@@ -89,7 +89,7 @@ At the end, the position tracking ceases to be accurate and the end effector is 
   <source src="../assets/lab4/PID-overshoot.webm" type="video/webm">
 </video>
 
-Attempting to decrease the loop time to 400 ms does result in some smoother motion, but on my computer
+Attempting to decrease the loop time to 400 &micro;s does result in some smoother motion, but on my computer
 at least the tracking will break once the loop underruns which does not take very long. Then the program
 needs to be restarted.
 It seems that generally speaking a faster control rate results in a closer-to-ideal performance of the
@@ -128,3 +128,26 @@ this case. I also noticed that the integral term could be increased a bit, but u
 same value without the same impact as not adjusting the PD values.
 
 ### Conclusion
+
+A circular motion path was implemented and a PID controller was tuned for static points and the path.
+The effects of loading the end effector with a hand also were observed. Each component of the controller
+is necessary to achieve a good result. The proportional part does the bulk of the movement, the derivative
+part minimizes overshoot, and the integral part eliminates (or mostly eliminates) steady state error.
+
+The trouble is that there doesn't seem to be an ideal tuning for the same hardware across different tasks.
+A more conservative controller that tries not to overshoot and risk losing track of the end effector works fine
+for a static point, but does not do a good job following a circular path. Using a more aggressive controller
+for path following helps better approximate the shape of the path, but then when suddenly moving a large distance it
+is more likely that instability will be encountered.
+Even the same task with and without the end effector held changes the tuning since the hand holding the Haply
+effectively introduces a dampening force that requires the controller to behave differently.
+
+One effect that seems very important is the controller update rate. The best rate that could be consistently maintained was approximately 2 kHz.
+Slower rates mean that the force determined by the controller is not updated as frequently and so the amount or direction of force may not change when it needs to.
+This can result in overshoot.
+The position of the end effector was also frequently off when the rate was decreased. This may indicate that the
+rate of 2kHz was too low (i.e., the highest frequency part of the system was more than 1 kHz). In terms of the effect,
+when the position was no longer accurate neither was the error and so the controller could not actually succeed.
+
+Going forward, it would likely make sense to split the sampling and PID controller update code into separate
+threads with separate rates if necessary. Position information would need to be protected with semaphores or mutexes, but it would allow better use of multithreading support on the CPU and might help avoid some issues observed in this lab.
