@@ -1,5 +1,7 @@
 ## Lab 4: Controlling Actuation using PID
 
+[Source code is available here.](../assets/lab4/lab4_regimbal.zip)
+
 ### Overview
 
 This lab focuses on the tuning and modification of an already implemented PID controller.
