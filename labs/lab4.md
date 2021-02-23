@@ -2,6 +2,12 @@
 
 ### Overview
 
+This lab focuses on the tuning and modification of an already implemented PID controller.
+The PID controller must be tuned to work with random, stationary points and to follow a path
+(e.g., a circle). Along with the effects of weighting the different PID components, the influence
+of update rate and the effect of loading the end effector with a hand must be considered.
+
+
 ### Tuning
 
 First it is necessary to tune the PID controller in the order of P, D, I.
@@ -86,6 +92,12 @@ At the end, the position tracking ceases to be accurate and the end effector is 
 Attempting to decrease the loop time to 400 ms does result in some smoother motion, but on my computer
 at least the tracking will break once the loop underruns which does not take very long. Then the program
 needs to be restarted.
+It seems that generally speaking a faster control rate results in a closer-to-ideal performance of the
+controller as there is less time between updates for error to accumulate. A slower rate, however, is
+more reliable with the timing method implemented here and is less likely to get outside of the
+10% tolerance band. However this slower rate does result in the corrective force being applied for longer
+and not adjusting as quickly as the end effector moves, which can result in the software no longer accurately
+tracking the position of the end effector and the control scheme failing.
 
 ### Path Tracking
 
@@ -106,5 +118,13 @@ With these parameters, the end effector roughly follows the target along a circu
 The proportional value may be too high considering that some oscillations still occur, however it seems
 that there is a trade-off between getting close to the target when the center of the circle moves and
 then closely following the circular path.
+
+### Holding the End Effector
+
+Holding the end effector essentially adds a dampening force to the system. While the proportional force needs to
+be increased for both the path following and static point PID controllers, the value for D can be reduced since
+the force caused by the hand effectively reduces the rate of change of error. Overshoot is less likely in
+this case. I also noticed that the integral term could be increased a bit, but ultimately could be left at the
+same value without the same impact as not adjusting the PD values.
 
 ### Conclusion
