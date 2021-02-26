@@ -207,7 +207,7 @@ The feel also changed when holding the end effector as the tuning changed from P
 wasn't a static target. The purely proportional control was not good at tracking, but it did feel consistent and smooth.
 Since position is what's measured and proportional control only depends on position, this makes sense as there is less
 compounding measurement error. However as the ID components were added and tuned so that the path was quickly followed,
-movements seemed jagged in the Haply in recordings and the force felt discontinuitous when the end effector was held.
+movements seemed jagged in the Haply in recordings and the force felt discontinuous when the end effector was held.
 It was getting close to the position of the circle, stopping, and then starting again.
 It wasn't the kind of smooth movement I would try to create myself if I was actually drawing a circle or guiding someone's
 hand.
