@@ -21,16 +21,20 @@ when the keyboard is used to adjust them. These changes can be seen in the `keyP
 
 The P parameter controls the proportional response of the controller relative to distance from the target.
 I noticed a trend where at low values (~0.01), the end effector would move slightly closer to the destination, but would still be a centimeter or so from the target.
-Increasing the value, however, to 0.002 or 0.003 causes the end effector to overshoot the target in some cases.
+Increasing the value, however, to 0.02 or 0.03 causes the end effector to overshoot the target in some cases.
 If it is too high, the end effector moves too quickly, the position is not tracked correctly, and the Haply gets stuck with the end effector pushing towards the edge.
 
-I decided to set the value of P to 0.01 to avoid cases where it would overshoot and the position tracked by the software would not agree with the actual location of the end effector. This might change if the loop frequency increases and these quicker movements are tracked.
+I decided to set the value of P to 0.01 at first to avoid cases where it would overshoot and the position tracked by the software would not agree with the actual location of the end effector. This might change if the loop frequency increases and these quicker movements are tracked.
 However, at this current value, the end effector moves closer to the target. It does not overshoot and stops
 before reaching it as friction overpowers the force signalled by the controller.
 
 <video width="100%" controls>
   <source src="../assets/lab4/P-0.01.webm" type="video/webm">
 </video>
+
+When holding the end effector, I could increase this value more. The actual sensation felt like the walls used in
+previous labs, which is understandable since those are modeled as springs and that force is proportional to the distance
+of penetration. The rendering was consistent.
 
 #### D
 
@@ -87,6 +91,12 @@ Increasing the loop time (decreasing the loop frequency) results in heavy oscill
 effector overshoots, updates, then turns around to correct. This behavior is shown in the video below.
 At the end, the position tracking ceases to be accurate and the end effector is stuck in the real world.
 
+Coming back to this after implementing path tracking, the PID controller could be tuned to stably follow the
+path (albeit less smoothly). The biggest issues emerge when the time is increased while the controller is running.
+Increasing the time would often result in instability and the loss of tracking described above. Decreasing the time
+would increase the smoothness of the motions but did not cause problems until the sampling rate couldn't be supported
+by Processing.
+
 <video width="100%" controls>
   <source src="../assets/lab4/PID-overshoot.webm" type="video/webm">
 </video>
@@ -110,7 +120,7 @@ physical coordinate system. The target position is updated as part of the drawin
 The actual tuning parameters needed to be updated. I noticed that the high differentiator value
 resulted in lots of vibration coming from the motor and the proportional value was too low to really follow
 the moving point once it got close enough.
-The new values used are P=0.06, I = 0.03 (no change), D=0.60, and smoothness is 0.80. Loop time was kept at 500 since that is the fastest that can reliably be run.
+The new values used are P=0.06, I=0.03 (no change), D=0.60, and smoothness is 0.80. Loop time was kept at 500 since that is the fastest that can reliably be run.
 With these parameters, the end effector roughly follows the target along a circular path.
 
 <video width="100%" controls>
@@ -121,6 +131,10 @@ The proportional value may be too high considering that some oscillations still 
 that there is a trade-off between getting close to the target when the center of the circle moves and
 then closely following the circular path.
 
+One issue I observed with the circular path is that near the top left of the circle the Haply would struggle
+to render a smooth curve and instead move the end effector in a line. I'm curious if this is a result of friction or
+an effect of the PID parameters, and will investigate this later.
+
 ### Holding the End Effector
 
 Holding the end effector essentially adds a dampening force to the system. While the proportional force needs to
@@ -128,6 +142,25 @@ be increased for both the path following and static point PID controllers, the v
 the force caused by the hand effectively reduces the rate of change of error. Overshoot is less likely in
 this case. I also noticed that the integral term could be increased a bit, but ultimately could be left at the
 same value without the same impact as not adjusting the PD values.
+
+### Reducing Friction
+
+One clear problem throughout is that there is an awful lot of friction in my Haply between the bottom of the end effector
+and metal surface. In fact, just using it regularly has resulted in scratches on the surface where common paths have been
+drawn. To reduce friction and see how this impacts the PID controls and behavior, I added a small piece of tissue on the
+bottom of the end effector and used sticky tack to secure it.
+
+<video width="100%" controls>
+  <source src="../assets/lab4/VID_20210226_120822.webm" type="video/webm">
+</video>
+
+This reduced the noise, but the smoothness of path following did not increase and the lack of a curve at the upper left of
+the circle did not change even with P increased to 0.12 (see above).
+Reversing the direction of rotation seemed to help slightly, although the Haply did make noise at that same part of the circle.
+
+<video width="100%" controls>
+  <source src="../assets/lab4/VID_20210226_122031.webm" type="video/webm">
+</video>
 
 ### Conclusion
 
@@ -153,3 +186,17 @@ when the position was no longer accurate neither was the error and so the contro
 
 Going forward, it would likely make sense to split the sampling and PID controller update code into separate
 threads with separate rates if necessary. Position information would need to be protected with semaphores or mutexes, but it would allow better use of multithreading support on the CPU and might help avoid some issues observed in this lab.
+
+The feel also changed when holding the end effector as the tuning changed from P to PD to PID, especially when there
+wasn't a static target. The purely proportional control was not good at tracking, but it did feel consistent and smooth.
+Since position is what's measured and proportional control only depends on position, this makes sense as there is less
+compounding measurement error. However as the ID components were added and tuned so that the path was quickly followed,
+movements seemed jagged in the Haply in recordings and the force felt discontinuitous when the end effector was held.
+It was getting close to the position of the circle, stopping, and then starting again.
+It wasn't the kind of smooth movement I would try to create myself if I was actually drawing a circle or guiding someone's
+hand.
+
+Perhaps if the values controlled were changed then the outcome would be smoother. That is, rather than setting position
+values and using the PID to update to that, maybe a more natural result would occur if velocity vectors were specified
+and tuned for. Obviously this runs into the issue with the Haply that it doesn't actually measure velocity directly and
+such a controller would likely be even more sensitive to issues and variation in sampling rate.
