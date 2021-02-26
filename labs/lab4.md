@@ -162,6 +162,22 @@ Reversing the direction of rotation seemed to help slightly, although the Haply 
   <source src="../assets/lab4/VID_20210226_122031.webm" type="video/webm">
 </video>
 
+### Random Loop Time
+
+To see the affect of a random loop time parameter, I wrote bound the period key to set the parameter
+to some integer between 500 (the lowest stable value) and 4000.
+```java
+...
+else if (key == '.') {
+  looptime = int(random(500, 4000));
+}
+```
+Unsurprisingly, it was impossible to control. As soon as the loop time parameter was large enough to cause instability,
+oscillations would occur, position tracking would stop, and the Haply would need to be reset.
+Setting an extremely low P value and no I or D kept the Haply stable, but the actual performance of the controller was
+terrible.
+This was a very clear lesson in the importance of reliable timing.
+
 ### Conclusion
 
 A circular motion path was implemented and a PID controller was tuned for static points and the path.
