@@ -1,7 +1,7 @@
 ## Yet Another CanHaptics501 Blog
 
 This is a space for blog posts done for the CanHaptics501 course.
-Right now things are pretty empty, but it should fill up soon!
+It is starting to really look like something!
 
 ### Labs
 
@@ -9,3 +9,7 @@ Right now things are pretty empty, but it should fill up soon!
 * [Lab 2: Intro to Haply](labs/lab2)
 * [Lab 3: Communicate Something with Haply](labs/lab3)
 * [Lab 4: Controlled Actuation using PID](labs/lab4)
+
+### Project
+
+* [Iteration 1: Making a Pretty Skeleton](project/iteration1)
