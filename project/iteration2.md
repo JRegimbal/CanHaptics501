@@ -78,7 +78,7 @@ I created a synthesizer using addative synthesis in Pure Data that summed sine w
 messages of the form `/crescendo/play FREQUENCY DURATION`.
 This indicated to the Pure Data patch to play a note of
 frequency `FREQUENCY` for `DURATION` milliseconds, passing it through an attack-decay-sustain-release (ADSR)
-envelope. These messages were sent from Processing using the `[oscP5](www.sojamo.de/libraries/oscP5/)` library.
+envelope. These messages were sent from Processing using the [`oscP5`](www.sojamo.de/libraries/oscP5/) library.
 The built-in commands for parsing these messages were used in Pure Data. Currently the patch requires
 the user to start Pure Data separately to allow more flexibility in adjusting the synthesizer, but
 I intend to use the Pure Data bindings for Processing later on to make the software easier to use.
