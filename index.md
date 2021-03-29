@@ -13,3 +13,4 @@ It is starting to really look like something!
 ### Project
 
 * [Iteration 1: Making a Pretty Skeleton](project/iteration1)
+* [Iteration 2: Notes and Notches](project/iteration2)
