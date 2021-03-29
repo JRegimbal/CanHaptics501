@@ -1,5 +1,7 @@
 # Iteration 2: Notes and Notches
 
+The code shown in this iteration can be found on the [proto-staff branch](https://github.com/JRegimbal/crescendo/tree/proto-staff).
+
 ## Project Background
 
 Our project is Crescendo, a haptically-augmented musical score meant to help people with
